@@ -124,11 +124,33 @@ The `strategy` block should be placed inside the `spec` section of a Deployment.
 Example configuration:
 
 ```yaml
-strategy:
-  type: RollingUpdate
-  rollingUpdate:
-    maxUnavailable: 1
-    maxSurge: 1
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-deployment
+  labels:
+    app: nginx_app
+spec:
+  replicas: 3
+  strategy:  # Rolling update strategy is defined here inside the spec section
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: nginx_app
+  template:
+    metadata:
+      labels:
+        app: nginx_app
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.19
+        ports:
+        - containerPort: 80
+
 ```
 
 ---
