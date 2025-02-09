@@ -102,6 +102,10 @@ spec:
 ### 3.1. Update Process and Strategy
 - Kubernetes creates new Pods while keeping old ones running until new ones pass readiness checks.
 - Old Pods are terminated only after new ones are available.
+- **Deployments** use rolling updates by default with `kubectl rollout` commands, ensuring zero-downtime upgrades.
+- **StatefulSets** support rolling updates but perform them in a controlled order (respecting pod identity and ordering).
+- **DaemonSets** can perform rolling updates using the `RollingUpdate` update strategy.
+- 🚫 **Standalone Pods do not support rolling updates** because they are not managed by a controller. If you delete a Pod, Kubernetes does not automatically recreate it.
 
 ### 3.2. Change Cause Annotation
 To document why an update occurred:
@@ -112,6 +116,8 @@ kubectl annotate deployment/nginx-deployment kubernetes.io/change-cause="Updated
 ```
 
 ### 3.3. Rolling Update Strategy Parameters
+The `strategy` block should be placed inside the `spec` section of a Deployment.
+
 - **maxUnavailable:** Maximum number of Pods that can be unavailable during an update.
 - **maxSurge:** Maximum number of extra Pods that can be created above the desired replica count during an update.
 
