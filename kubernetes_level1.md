@@ -131,8 +131,13 @@ spec:
         ports:
         - containerPort: 80
 ```
+### 3.2. Labels and MatchLabels
+- **Deployment Metadata Labels:** Organize and filter Deployments.
+- **Selector (matchLabels):** Defines which Pods the Deployment manages.
+- **Pod Template Labels:** Ensures Pods created by the Deployment have correct labels.
 
-### 3.2. Difference Between ReplicaSet and Deployment
+
+### 3.3. Difference Between ReplicaSet and Deployment
 | Feature       | ReplicaSet | Deployment |
 |--------------|------------|------------|
 | Scaling      | Yes (manual) | Yes (automatic and declarative) |
