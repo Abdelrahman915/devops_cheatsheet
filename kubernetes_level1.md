@@ -155,7 +155,7 @@ spec:
 
 ---
 
-## 4. Operational Tips
+### 3.4. Operational Tips
 - **Monitor rollout status:**
   ```bash
   kubectl rollout status deployment/nginx-deployment
