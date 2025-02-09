@@ -11,7 +11,7 @@ This document provides an overview of key Kubernetes concepts related to Pods, R
   - [2.2. When to Use a ReplicaSet](#22-when-to-use-a-replicaset)
 - [3. Deployment Configuration](#3-deployment-configuration)
   - [3.1. Deployment YAML Example](#31-deployment-yaml-example)
-  - [3.2. Labels and MatchLabels](#32-labels-and-matchlabels
+  - [3.2. Labels and MatchLabels](#32-labels-and-matchlabels)
   - [3.3. Difference Between ReplicaSet and Deployment](#33-difference-between-replicaset-and-deployment)
 - [4. Rolling Updates](#4-rolling-updates)
   - [4.1. Update Process and Strategy](#41-update-process-and-strategy)
