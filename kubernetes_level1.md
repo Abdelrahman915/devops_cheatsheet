@@ -17,8 +17,10 @@ This document provides an overview of key Kubernetes concepts related to Pods, R
   - [4.1. Update Process and Strategy](#41-update-process-and-strategy)
   - [4.2. Change Cause Annotation](#42-change-cause-annotation)
   - [4.3. Rolling Update Strategy Parameters](#43-rolling-update-strategy-parameters)
-- [5. Operational Tips](#5-operational-tips)
-
+  - [4.4. Operational Tips for rolling updates](#44-operational-tips-for-rolling-updates)
+- [5. Difference Between Kubernetes Jobs and CronJobs](#5-difference-between-kubernetes-jobs-and-cronjobs)
+  - [5.1. Kubernetes Jobs](#51-kubernetes-jobs)
+  - [5.1. Kubernetes CronJobs](#52-kubernetes-cronjobs)
 ---
 
 ## 1. Pod Configuration
@@ -204,7 +206,7 @@ spec:
 
 ---
 
-## 5. Operational Tips
+### 4.4. Operational Tips for rolling updates
 - **Monitor rollout status:**
   ```bash
   kubectl rollout status deployment/nginx-deployment
@@ -217,12 +219,86 @@ spec:
   ```bash
   kubectl rollout undo deployment/nginx-deployment
   ```
+---
+
+
+## 5. Difference Between Kubernetes Jobs and CronJobs
+
+### 5.1. Kubernetes Jobs
+A Kubernetes Job creates one or more pods to run a task to completion. Once the task is finished, the Job is marked as complete. Jobs are useful for batch processing tasks that need to run once or a fixed number of times.
+
+### Example: Kubernetes Job
+
+```yaml
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: simple-job
+spec:
+  template:
+    spec:
+      containers:
+      - name: hello
+        image: busybox
+        command: ["echo", "Hello from Kubernetes Job!"]
+      restartPolicy: Never
+```
+
+#### Expected Output
+```shell
+kubectl apply -f job.yaml
+kubectl get jobs
+kubectl get pods --show-all
+kubectl logs <pod-name>
+```
+Expected log output:
+```shell
+Hello from Kubernetes Job!
+```
 
 ---
 
+### 5.2 Kubernetes CronJobs
+A Kubernetes CronJob runs a Job on a scheduled basis, similar to a Unix cron job. This is useful for periodic tasks like backups, report generation, or data cleanup.
+
+#### Example: Kubernetes CronJob
+
+```yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: simple-cronjob
+spec:
+  schedule: "*/1 * * * *" # Runs every minute
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: hello
+            image: busybox
+            command: ["echo", "Hello from Kubernetes CronJob!"]
+          restartPolicy: Never
+```
+
+#### Expected Output
+```shell
+kubectl apply -f cronjob.yaml
+kubectl get cronjobs
+kubectl get jobs
+kubectl get pods --show-all
+kubectl logs <pod-name>
+```
+Expected log output (repeats every minute):
+```shell
+Hello from Kubernetes CronJob!
+```
+```
+---
 ## Summary
 - Define Pods with or without resource limits.
 - Use ReplicaSets to maintain a fixed number of Pods.
 - Use Deployments for version management and updates.
 - Utilize rolling update strategies (`maxUnavailable`, `maxSurge`) for zero downtime.
 - Record deployment changes using annotations for tracking history.
+- Difference between Kubernetes CronJobs and Kubernetes Jobs
